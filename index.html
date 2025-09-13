@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Coupon Analytics - AI Powered</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: #000;
+        min-height: 100vh;
+        color: #fff;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .cyber-grid {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+            rgba(0, 100, 200, 0.1) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 100, 200, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: gridMove 20s linear infinite;
+        z-index: -2;
+      }
+
+      @keyframes gridMove {
+        0% {
+          transform: translateY(0) translateX(0);
+        }
+        100% {
+          transform: translateY(50px) translateX(50px);
+        }
+      }
+
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(0, 200, 255, 0.5);
+        box-shadow: 0 0 20px rgba(0, 200, 255, 0.7);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) translateX(0px) scale(1);
+        }
+        33% {
+          transform: translateY(-30px) translateX(20px) scale(1.1);
+        }
+        66% {
+          transform: translateY(20px) translateX(-20px) scale(0.9);
+        }
+      }
+
+      .cyber-line {
+        position: fixed;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 200, 255, 0.8),
+          transparent
+        );
+        animation: scanline 3s linear infinite;
+        z-index: -1;
+      }
+
+      @keyframes scanline {
+        0% {
+          top: 0%;
+        }
+        100% {
+          top: 100%;
+        }
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .cyber-glass {
+        background: rgba(0, 10, 30, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 200, 255, 0.2),
+          inset 0 0 15px rgba(0, 200, 255, 0.1);
+      }
+
+      .cyber-glass-strong {
+        background: rgba(0, 20, 40, 0.8);
+        border: 1px solid rgba(0, 200, 255, 0.5);
+        box-shadow: 0 15px 35px rgba(0, 200, 255, 0.3),
+          inset 0 0 20px rgba(0, 200, 255, 0.2);
+      }
+
+      .page {
+        display: none;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .page.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .landing-page {
+        text-align: center;
+        padding: 80px 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .hero-badge {
+        background: rgba(0, 200, 255, 0.2);
+        color: #00c8ff;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        margin-bottom: 30px;
+        border: 1px solid rgba(0, 200, 255, 0.5);
+        animation: slideInDown 1s ease 0.2s both;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .hero-title {
+        font-size: clamp(3rem, 8vw, 5rem);
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          #00c8ff 0%,
+          #0077ff 50%,
+          #7700ff 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        text-shadow: 0 0 30px rgba(0, 200, 255, 0.5);
+        animation: slideInUp 1s ease 0.4s both;
+        line-height: 1.1;
+      }
+
+      .hero-subtitle {
+        font-size: 1.4rem;
+        color: rgba(200, 220, 255, 0.9);
+        margin-bottom: 50px;
+        max-width: 600px;
+        line-height: 1.6;
+        animation: slideInUp 1s ease 0.6s both;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 50px 0;
+        max-width: 1000px;
+      }
+
+      .feature-card {
+        background: rgba(0, 30, 60, 0.5);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        color: #ccf;
+        transition: all 0.3s ease;
+        animation: slideInUp 1s ease calc(0.8s + var(--delay)) both;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        background: rgba(0, 50, 100, 0.6);
+        box-shadow: 0 10px 30px rgba(0, 200, 255, 0.3);
+        border-color: rgba(0, 200, 255, 0.7);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        display: block;
+        filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.7));
+      }
+
+      .cta-button {
+        background: linear-gradient(
+          135deg,
+          #0077ff 0%,
+          #0066ee 50%,
+          #0055dd 100%
+        );
+        color: white;
+        border: none;
+        padding: 18px 40px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 0 25px rgba(0, 119, 255, 0.6);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        animation: slideInUp 1s ease 0.8s both;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .cta-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .cta-button:hover::before {
+        left: 100%;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 0 40px rgba(0, 119, 255, 0.8);
+      }
+
+      .profile-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 30px;
+        align-items: start;
+      }
+
+      .profile-info {
+        background: rgba(0, 30, 60, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        color: #ccf;
+        position: sticky;
+        top: 20px;
+      }
+
+      .profile-card {
+        background: rgba(10, 20, 40, 0.8);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 200, 255, 0.4);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 15px 40px rgba(0, 200, 255, 0.2);
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        color: #00c8ff;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      .section-title::after {
+        content: "";
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, #00c8ff, #0077ff);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-radius: 2px;
+      }
+
+      .form-section {
+        background: rgba(0, 50, 100, 0.3);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-left: 4px solid #00c8ff;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #aaf;
+        font-size: 0.95rem;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 15px 18px;
+        border: 2px solid rgba(0, 200, 255, 0.2);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: rgba(0, 30, 60, 0.5);
+        backdrop-filter: blur(10px);
+        color: #fff;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #00c8ff;
+        background: rgba(0, 50, 100, 0.6);
+        box-shadow: 0 0 0 4px rgba(0, 200, 255, 0.1),
+          0 0 25px rgba(0, 200, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .transaction-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .transaction-item {
+        background: rgba(0, 40, 80, 0.5);
+        border: 1px solid rgba(0, 200, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        backdrop-filter: blur(5px);
+      }
+
+      .add-transaction-btn {
+        background: linear-gradient(135deg, #00cc66, #00aa55);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .add-transaction-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
+      }
+
+      .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #0077ff 0%, #0055cc 100%);
+        color: white;
+        border: none;
+        padding: 18px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        margin-top: 30px;
+        box-shadow: 0 0 30px rgba(0, 119, 255, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 40px rgba(0, 119, 255, 0.6);
+      }
+
+      .results-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+
+      .results-main {
+        background: rgba(10, 20, 40, 0.8);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 200, 255, 0.4);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 15px 40px rgba(0, 200, 255, 0.2);
+      }
+
+      .results-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .customer-overview {
+        background: rgba(0, 30, 60, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        color: #ccf;
+      }
+
+      .eligibility-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+      }
+
+      .eligible {
+        background: linear-gradient(135deg, #00cc66, #00aa55);
+        color: white;
+        box-shadow: 0 0 25px rgba(0, 204, 102, 0.4);
+      }
+
+      .not-eligible {
+        background: linear-gradient(135deg, #ff3366, #cc1144);
+        color: white;
+        box-shadow: 0 0 25px rgba(255, 51, 102, 0.4);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #0077ff 0%, #0055cc 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 119, 255, 0.3);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(0, 119, 255, 0.4);
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+
+      .probability-container {
+        background: rgba(0, 50, 100, 0.3);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 25px 0;
+      }
+
+      .probability-bar {
+        background: rgba(50, 50, 100, 0.5);
+        height: 25px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin: 15px 0;
+        position: relative;
+      }
+
+      .probability-fill {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          #00cc66 0%,
+          #00aa55 50%,
+          #66ff99 100%
+        );
+        transition: width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border-radius: 15px;
+        position: relative;
+      }
+
+      .probability-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 100%
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .recommendations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .recommendation-card {
+        background: rgba(0, 40, 80, 0.6);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        border-radius: 12px;
+        padding: 25px;
+        transition: all 0.3s ease;
+        border-left: 5px solid #00c8ff;
+      }
+
+      .recommendation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        background: rgba(0, 50, 100, 0.7);
+      }
+
+      .campaign-timeline {
+        background: rgba(0, 30, 60, 0.6);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        border-radius: 15px;
+        padding: 30px;
+        color: #ccf;
+      }
+
+      .timeline-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(200, 220, 255, 0.1);
+      }
+
+      .timeline-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff3366, #ff5588);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+
+      .back-btn {
+        background: rgba(0, 200, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: #ccf;
+        border: 1px solid rgba(0, 200, 255, 0.3);
+        padding: 12px 25px;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .back-btn:hover {
+        background: rgba(0, 200, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(60px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-60px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+      }
+
+      .loading.active {
+        display: block;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(0, 200, 255, 0.3);
+        border-left-color: #00c8ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .profile-container {
+          grid-template-columns: 1fr;
+        }
+        .results-container {
+          grid-template-columns: 1fr;
+        }
+        .profile-info {
+          position: relative;
+          order: 2;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 3rem;
+        }
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .container {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cyber-grid"></div>
+    <div class="particles" id="particles"></div>
+    <div class="cyber-line" id="scanline"></div>
+
+    <div class="container">
+      <div id="landing" class="page active">
+        <div class="landing-page">
+          <div class="hero-badge">AI-Powered Customer Analytics</div>
+          <h1 class="hero-title">Smart Coupon Analytics</h1>
+          <p class="hero-subtitle">
+            Predict customer behavior with advanced machine learning algorithms
+            and increase conversion rates through personalized coupon campaigns
+          </p>
+
+          <div class="features-grid">
+            <div class="feature-card" style="--delay: 0s">
+              <span class="feature-icon">🎯</span>
+              <h3>Predictive Analytics</h3>
+              <p>
+                AI algorithms predict customer response probability with 95%
+                accuracy
+              </p>
+            </div>
+            <div class="feature-card" style="--delay: 0.1s">
+              <span class="feature-icon">📊</span>
+              <h3>Real-time Insights</h3>
+              <p>
+                Live dashboard with customer segmentation and behavior patterns
+              </p>
+            </div>
+            <div class="feature-card" style="--delay: 0.2s">
+              <span class="feature-icon">💎</span>
+              <h3>Smart Targeting</h3>
+              <p>
+                Personalized coupon recommendations based on purchase history
+              </p>
+            </div>
+          </div>
+
+          <button class="cta-button" onclick="showProfileForm()">
+            Create Customer Profile
+          </button>
+        </div>
+      </div>
+
+      <div id="profile" class="page">
+        <div class="profile-container">
+          <div class="profile-info cyber-glass">
+            <h3>Why We Need This Data</h3>
+            <div style="margin: 20px 0">
+              <h4>🔍 Customer Demographics</h4>
+              <p style="margin: 10px 0; opacity: 0.9; line-height: 1.5">
+                Age, income, and family data help predict spending patterns and
+                coupon sensitivity.
+              </p>
+
+              <h4>🛒 Transaction History</h4>
+              <p style="margin: 10px 0; opacity: 0.9; line-height: 1.5">
+                Past purchases reveal preferences and help match relevant
+                coupons to increase conversion rates.
+              </p>
+
+              <h4>📈 Behavioral Analytics</h4>
+              <p style="margin: 10px 0; opacity: 0.9; line-height: 1.5">
+                Purchase frequency and timing patterns enable precise targeting
+                and campaign timing.
+              </p>
+
+              <h4>🎯 Campaign Mapping</h4>
+              <p style="margin: 10px 0; opacity: 0.9; line-height: 1.5">
+                Coupon-product mapping ensures customers receive offers for
+                items they're likely to purchase.
+              </p>
+            </div>
+
+            <div class="campaign-timeline">
+              <h4>Campaign Timeline</h4>
+              <div class="timeline-item">
+                <div class="timeline-icon">📅</div>
+                <div>
+                  <strong>Campaign Start</strong>
+                  <p>Eligibility validation begins</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon">🎯</div>
+                <div>
+                  <strong>Target Analysis</strong>
+                  <p>AI predicts response probability</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon">📧</div>
+                <div>
+                  <strong>Coupon Delivery</strong>
+                  <p>Personalized offers sent</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon">📊</div>
+                <div>
+                  <strong>Performance Tracking</strong>
+                  <p>Real-time conversion monitoring</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-card cyber-glass-strong">
+            <button class="back-btn" onclick="showLanding()">
+              ← Back to Home
+            </button>
+            <h2 class="section-title">Customer Profile Analysis</h2>
+
+            <form id="customerForm">
+              <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: #00c8ff">
+                  👤 Basic Information
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="customerId">Customer ID</label>
+                    <input
+                      type="text"
+                      id="customerId"
+                      required
+                      placeholder="CUST-2024-001"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input
+                      type="text"
+                      id="customerName"
+                      required
+                      placeholder="John Doe"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="age">Age</label>
+                    <input
+                      type="number"
+                      id="age"
+                      min="18"
+                      max="100"
+                      required
+                      placeholder="35"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" required>
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                      <option value="prefer-not-to-say">
+                        Prefer not to say
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: #00c8ff">
+                  👨‍👩‍👧‍👦 Family & Lifestyle
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="maritalStatus">Marital Status</label>
+                    <select id="maritalStatus" required>
+                      <option value="">Select Status</option>
+                      <option value="single">Single</option>
+                      <option value="married">Married</option>
+                      <option value="divorced">Divorced</option>
+                      <option value="widowed">Widowed</option>
+                      <option value="domestic-partnership">
+                        Domestic Partnership
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="familySize">Family Size</label>
+                    <input
+                      type="number"
+                      id="familySize"
+                      min="1"
+                      max="10"
+                      required
+                      placeholder="4"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="children">Number of Children</label>
+                    <input
+                      type="number"
+                      id="children"
+                      min="0"
+                      max="10"
+                      placeholder="2"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="incomeBracket">Income Bracket</label>
+                    <select id="incomeBracket" required>
+                      <option value="">Select Bracket</option>
+                      <option value="low">Low (< $30,000)</option>
+                      <option value="lower-middle">
+                        Lower Middle ($30,000 - $50,000)
+                      </option>
+                      <option value="middle">Middle ($50,000 - $80,000)</option>
+                      <option value="upper-middle">
+                        Upper Middle ($80,000 - $120,000)
+                      </option>
+                      <option value="high">High ($120,000 - $200,000)</option>
+                      <option value="premium">Premium (> $200,000)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: #00c8ff">
+                  🛒 Purchase Behavior
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="avgPurchase">Average Purchase Amount ($)</label>
+                    <input
+                      type="number"
+                      id="avgPurchase"
+                      min="0"
+                      step="0.01"
+                      required
+                      placeholder="125.50"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="purchaseFrequency"
+                      >Monthly Purchase Frequency</label
+                    >
+                    <input
+                      type="number"
+                      id="purchaseFrequency"
+                      min="0"
+                      required
+                      placeholder="8"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="preferredCategory">Preferred Category</label>
+                    <select id="preferredCategory" required>
+                      <option value="">Select Category</option>
+                      <option value="groceries">Groceries & Food</option>
+                      <option value="pharmacy">Pharmacy & Health</option>
+                      <option value="electronics">Electronics</option>
+                      <option value="clothing">Clothing & Fashion</option>
+                      <option value="home">Home & Garden</option>
+                      <option value="beauty">Beauty & Personal Care</option>
+                      <option value="sports">Sports & Fitness</option>
+                      <option value="books">Books & Education</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="lastPurchase">Days Since Last Purchase</label>
+                    <input
+                      type="number"
+                      id="lastPurchase"
+                      min="0"
+                      required
+                      placeholder="7"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: #00c8ff">
+                  📈 Recent Transaction History
+                </h3>
+                <div id="transactionContainer">
+                  <div class="transaction-item">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Item ID</label>
+                        <input
+                          type="text"
+                          placeholder="ITEM-001"
+                          class="transaction-itemId"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label>Brand</label>
+                        <input
+                          type="text"
+                          placeholder="Nike"
+                          class="transaction-brand"
+                        />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Category</label>
+                        <select class="transaction-category">
+                          <option value="">Select Category</option>
+                          <option value="groceries">Groceries & Food</option>
+                          <option value="pharmacy">Pharmacy & Health</option>
+                          <option value="electronics">Electronics</option>
+                          <option value="clothing">Clothing & Fashion</option>
+                          <option value="home">Home & Garden</option>
+                          <option value="beauty">Beauty & Personal Care</option>
+                          <option value="sports">Sports & Fitness</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          placeholder="49.99"
+                          class="transaction-amount"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="add-transaction-btn"
+                  onclick="addTransaction()"
+                >
+                  + Add Another Transaction
+                </button>
+              </div>
+
+              <div class="form-section">
+                <h3 style="margin-bottom: 20px; color: #00c8ff">
+                  🎟️ Coupon Preferences
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="couponUsageHistory"
+                      >Previous Coupons Used (Last 6 months)</label
+                    >
+                    <input
+                      type="number"
+                      id="couponUsageHistory"
+                      min="0"
+                      placeholder="5"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="preferredDiscount"
+                      >Preferred Discount Type</label
+                    >
+                    <select id="preferredDiscount">
+                      <option value="">Select Type</option>
+                      <option value="percentage">Percentage Off</option>
+                      <option value="fixed">Fixed Amount Off</option>
+                      <option value="bogo">Buy One Get One</option>
+                      <option value="free-shipping">Free Shipping</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="submit-btn">
+                🚀 Analyze Customer & Predict Behavior
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="loading" id="loadingScreen">
+          <div class="spinner"></div>
+          <h3 style="color: #00c8ff">Analyzing Customer Data...</h3>
+          <p style="color: rgba(200, 220, 255, 0.8)">
+            Running AI algorithms to predict coupon behavior
+          </p>
+        </div>
+      </div>
+
+      <div id="results" class="page">
+        <div class="results-container">
+          <div class="results-main cyber-glass-strong">
+            <button class="back-btn" onclick="showProfileForm()">
+              ← Back to Profile
+            </button>
+            <h2 class="section-title">Customer Analysis Results</h2>
+            <div id="resultsContent"></div>
+          </div>
+
+          <div class="results-sidebar">
+            <div class="customer-overview cyber-glass">
+              <h3>Customer Overview</h3>
+              <div id="customerSummary"></div>
+            </div>
+
+            <div class="customer-overview cyber-glass">
+              <h3>Campaign Timeline</h3>
+              <div id="campaignTimeline">
+                <div class="timeline-item">
+                  <div class="timeline-icon">📊</div>
+                  <div>
+                    <strong>Analysis Complete</strong>
+                    <small id="analysisTime"></small>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">🎯</div>
+                  <div>
+                    <strong>Campaign Start</strong>
+                    <small id="campaignStart"></small>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">📧</div>
+                  <div>
+                    <strong>Coupon Delivery</strong>
+                    <small id="couponDelivery"></small>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-icon">⏰</div>
+                  <div>
+                    <strong>Campaign End</strong>
+                    <small id="campaignEnd"></small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let customerData = {};
+      let transactions = [];
+
+      const coupons = {
+        groceries: {
+          discount: 15,
+          minPurchase: 75,
+          category: "Groceries & Food",
+          validityDays: 30,
+          campaignCode: "FOOD2024",
+          description: "Save on fresh produce and pantry essentials",
+        },
+        pharmacy: {
+          discount: 20,
+          minPurchase: 40,
+          category: "Pharmacy & Health",
+          validityDays: 45,
+          campaignCode: "HEALTH2024",
+          description: "Healthcare and wellness products discount",
+        },
+        electronics: {
+          discount: 25,
+          minPurchase: 200,
+          category: "Electronics",
+          validityDays: 21,
+          campaignCode: "TECH2024",
+          description: "Latest gadgets and electronics deals",
+        },
+        clothing: {
+          discount: 30,
+          minPurchase: 100,
+          category: "Clothing & Fashion",
+          validityDays: 35,
+          campaignCode: "FASHION2024",
+          description: "Trendy apparel and accessories",
+        },
+        home: {
+          discount: 18,
+          minPurchase: 150,
+          category: "Home & Garden",
+          validityDays: 40,
+          campaignCode: "HOME2024",
+          description: "Home improvement and garden supplies",
+        },
+        beauty: {
+          discount: 22,
+          minPurchase: 60,
+          category: "Beauty & Personal Care",
+          validityDays: 28,
+          campaignCode: "BEAUTY2024",
+          description: "Premium beauty and skincare products",
+        },
+        sports: {
+          discount: 20,
+          minPurchase: 120,
+          category: "Sports & Fitness",
+          validityDays: 35,
+          campaignCode: "FIT2024",
+          description: "Athletic gear and fitness equipment",
+        },
+        books: {
+          discount: 12,
+          minPurchase: 30,
+          category: "Books & Education",
+          validityDays: 60,
+          campaignCode: "LEARN2024",
+          description: "Educational materials and books",
+        },
+      };
+
+      function createParticles() {
+        const container = document.getElementById("particles");
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          const size = Math.random() * 6 + 2;
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.animationDelay = `${Math.random() * 6}s`;
+          container.appendChild(particle);
+        }
+
+        const scanline = document.getElementById("scanline");
+        scanline.style.top = `${Math.random() * 100}%`;
+        scanline.style.width = `${Math.random() * 50 + 30}%`;
+        scanline.style.left = `${Math.random() * 25}%`;
+      }
+
+      function showLanding() {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("landing").classList.add("active");
+      }
+
+      function showProfileForm() {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("profile").classList.add("active");
+        document.getElementById("loadingScreen").classList.remove("active");
+      }
+
+      function showResults() {
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById("results").classList.add("active");
+      }
+
+      function addTransaction() {
+        const container = document.getElementById("transactionContainer");
+        const newTransaction = document.createElement("div");
+        newTransaction.className = "transaction-item";
+        newTransaction.innerHTML = `
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Item ID</label>
+                        <input type="text" placeholder="ITEM-00${
+                          container.children.length + 1
+                        }" class="transaction-itemId">
+                    </div>
+                    <div class="form-group">
+                        <label>Brand</label>
+                        <input type="text" placeholder="Brand Name" class="transaction-brand">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select class="transaction-category">
+                            <option value="">Select Category</option>
+                            <option value="groceries">Groceries & Food</option>
+                            <option value="pharmacy">Pharmacy & Health</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="clothing">Clothing & Fashion</option>
+                            <option value="home">Home & Garden</option>
+                            <option value="beauty">Beauty & Personal Care</option>
+                            <option value="sports">Sports & Fitness</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" step="0.01" placeholder="0.00" class="transaction-amount">
+                    </div>
+                </div>
+                <button type="button" onclick="removeTransaction(this)" style="background: #ff3366; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-top: 10px;">Remove</button>
+            `;
+        container.appendChild(newTransaction);
+      }
+
+      function removeTransaction(button) {
+        button.parentElement.remove();
+      }
+
+      function collectTransactions() {
+        const transactionItems = document.querySelectorAll(".transaction-item");
+        transactions = [];
+
+        transactionItems.forEach((item) => {
+          const itemId = item.querySelector(".transaction-itemId")?.value;
+          const brand = item.querySelector(".transaction-brand")?.value;
+          const category = item.querySelector(".transaction-category")?.value;
+          const amount = item.querySelector(".transaction-amount")?.value;
+
+          if (itemId || brand || category || amount) {
+            transactions.push({
+              itemId: itemId || "",
+              brand: brand || "",
+              category: category || "",
+              amount: parseFloat(amount) || 0,
+            });
+          }
+        });
+      }
+
+      document
+        .getElementById("customerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          document.getElementById("loadingScreen").classList.add("active");
+
+          setTimeout(() => {
+            collectTransactions();
+            customerData = {
+              customerId: document.getElementById("customerId").value,
+              name: document.getElementById("customerName").value,
+              age: parseInt(document.getElementById("age").value),
+              gender: document.getElementById("gender").value,
+              maritalStatus: document.getElementById("maritalStatus").value,
+              familySize: parseInt(document.getElementById("familySize").value),
+              children:
+                parseInt(document.getElementById("children").value) || 0,
+              incomeBracket: document.getElementById("incomeBracket").value,
+              avgPurchase: parseFloat(
+                document.getElementById("avgPurchase").value
+              ),
+              purchaseFrequency: parseInt(
+                document.getElementById("purchaseFrequency").value
+              ),
+              preferredCategory:
+                document.getElementById("preferredCategory").value,
+              lastPurchase: parseInt(
+                document.getElementById("lastPurchase").value
+              ),
+              couponUsageHistory:
+                parseInt(document.getElementById("couponUsageHistory").value) ||
+                0,
+              preferredDiscount:
+                document.getElementById("preferredDiscount").value,
+              transactions: transactions,
+            };
+
+            analyzeCustomer();
+            showResults();
+          }, 3000);
+        });
+
+      function analyzeCustomer() {
+        const analysis = performEnhancedAnalysis(customerData);
+        displayEnhancedResults(analysis);
+        displayCustomerSummary();
+        displayCampaignTimeline();
+      }
+
+      function performEnhancedAnalysis(data) {
+        const coupon = coupons[data.preferredCategory];
+
+        let isEligible = true;
+        let eligibilityReasons = [];
+        let eligibilityScore = 100;
+
+        if (data.age < 18) {
+          isEligible = false;
+          eligibilityReasons.push("Must be 18+ years old");
+          eligibilityScore -= 30;
+        } else if (data.age > 70) {
+          eligibilityScore -= 10;
+          eligibilityReasons.push("Age may affect certain offer types");
+        }
+
+        if (data.avgPurchase < coupon.minPurchase * 0.4) {
+          isEligible = false;
+          eligibilityReasons.push(
+            `Average purchase (${data.avgPurchase}) too low for ${coupon.category} offers`
+          );
+          eligibilityScore -= 40;
+        } else if (data.avgPurchase < coupon.minPurchase * 0.7) {
+          eligibilityScore -= 15;
+          eligibilityReasons.push(
+            "Average purchase slightly below optimal range"
+          );
+        }
+
+        if (data.purchaseFrequency < 1) {
+          isEligible = false;
+          eligibilityReasons.push("Insufficient purchase frequency");
+          eligibilityScore -= 35;
+        } else if (data.purchaseFrequency < 3) {
+          eligibilityScore -= 10;
+          eligibilityReasons.push("Low purchase frequency detected");
+        }
+
+        const categoryTransactions = data.transactions.filter(
+          (t) => t.category === data.preferredCategory
+        );
+        if (categoryTransactions.length === 0 && data.transactions.length > 0) {
+          eligibilityScore -= 20;
+          eligibilityReasons.push("No recent purchases in preferred category");
+        }
+
+        let usageProbability = 0;
+        let confidenceLevel = "Low";
+
+        if (isEligible) {
+          let prob = 45;
+
+          if (data.age >= 25 && data.age <= 45) prob += 18;
+          else if (data.age >= 18 && data.age <= 24) prob += 12;
+          else if (data.age >= 46 && data.age <= 55) prob += 15;
+          else if (data.age >= 56 && data.age <= 65) prob += 8;
+
+          if (data.children > 0) prob += 12;
+          if (data.familySize >= 4) prob += 8;
+          else if (data.familySize >= 2) prob += 4;
+
+          switch (data.incomeBracket) {
+            case "lower-middle":
+              prob += 22;
+              break;
+            case "middle":
+              prob += 18;
+              break;
+            case "upper-middle":
+              prob += 12;
+              break;
+            case "high":
+              prob += 8;
+              break;
+            case "premium":
+              prob += 3;
+              break;
+            case "low":
+              prob += 25;
+              break;
+          }
+
+          if (data.purchaseFrequency >= 10) prob += 20;
+          else if (data.purchaseFrequency >= 6) prob += 15;
+          else if (data.purchaseFrequency >= 4) prob += 10;
+          else if (data.purchaseFrequency >= 2) prob += 5;
+
+          if (data.lastPurchase <= 3) prob += 15;
+          else if (data.lastPurchase <= 7) prob += 12;
+          else if (data.lastPurchase <= 14) prob += 8;
+          else if (data.lastPurchase <= 30) prob += 3;
+          else if (data.lastPurchase > 60) prob -= 15;
+
+          if (data.avgPurchase >= coupon.minPurchase * 1.5) prob += 20;
+          else if (data.avgPurchase >= coupon.minPurchase) prob += 15;
+          else if (data.avgPurchase >= coupon.minPurchase * 0.8) prob += 8;
+
+          if (data.couponUsageHistory >= 5) prob += 18;
+          else if (data.couponUsageHistory >= 2) prob += 12;
+          else if (data.couponUsageHistory === 0) prob -= 8;
+
+          const categorySpend = categoryTransactions.reduce(
+            (sum, t) => sum + t.amount,
+            0
+          );
+          if (categorySpend >= coupon.minPurchase) prob += 15;
+          else if (categorySpend >= coupon.minPurchase * 0.5) prob += 8;
+
+          if (
+            data.gender === "female" &&
+            ["beauty", "clothing", "home"].includes(data.preferredCategory)
+          )
+            prob += 8;
+          if (
+            data.gender === "male" &&
+            ["electronics", "sports"].includes(data.preferredCategory)
+          )
+            prob += 8;
+
+          if (data.maritalStatus === "married") prob += 10;
+          else if (data.maritalStatus === "single" && data.age >= 25) prob += 5;
+
+          usageProbability = Math.min(98, Math.max(2, prob));
+
+          if (usageProbability >= 80) confidenceLevel = "Very High";
+          else if (usageProbability >= 65) confidenceLevel = "High";
+          else if (usageProbability >= 50) confidenceLevel = "Medium";
+          else if (usageProbability >= 35) confidenceLevel = "Low";
+          else confidenceLevel = "Very Low";
+        }
+
+        return {
+          isEligible,
+          eligibilityReasons,
+          eligibilityScore: Math.max(0, eligibilityScore),
+          usageProbability,
+          confidenceLevel,
+          recommendedCoupon: coupon,
+          customerScore: calculateEnhancedCustomerScore(data),
+          insights: generateEnhancedInsights(
+            data,
+            isEligible,
+            usageProbability
+          ),
+          alternativeCoupons: suggestAlternativeCoupons(data),
+          predictedRevenue: calculatePredictedRevenue(
+            data,
+            usageProbability,
+            coupon
+          ),
+          riskFactors: identifyRiskFactors(data),
+          recommendedActions: generateRecommendedActions(
+            data,
+            usageProbability,
+            isEligible
+          ),
+        };
+      }
+
+      function calculateEnhancedCustomerScore(data) {
+        let score = 0;
+
+        score += Math.min(30, data.purchaseFrequency * 2);
+        score += Math.min(10, data.avgPurchase / 50);
+
+        score += Math.min(15, data.couponUsageHistory * 3);
+        score += data.familySize * 2;
+        if (data.lastPurchase <= 14) score += 8;
+
+        if (data.age >= 25 && data.age <= 55) score += 15;
+        if (data.maritalStatus === "married") score += 5;
+
+        switch (data.incomeBracket) {
+          case "middle":
+            score += 15;
+            break;
+          case "upper-middle":
+            score += 12;
+            break;
+          case "high":
+            score += 10;
+            break;
+          case "lower-middle":
+            score += 13;
+            break;
+          case "premium":
+            score += 8;
+            break;
+          case "low":
+            score += 6;
+            break;
+        }
+
+        return Math.min(100, Math.round(score));
+      }
+
+      function generateEnhancedInsights(data, eligible, probability) {
+        const insights = [];
+
+        if (eligible) {
+          if (probability >= 80) {
+            insights.push(
+              `🎯 HIGH PRIORITY: ${probability}% likelihood - Prime candidate for immediate campaign`
+            );
+            insights.push(
+              `💰 Expected to drive significant revenue in ${data.preferredCategory}`
+            );
+          } else if (probability >= 60) {
+            insights.push(
+              `✅ GOOD PROSPECT: ${probability}% likelihood - Strong potential for conversion`
+            );
+            insights.push(`📊 Consider A/B testing different discount levels`);
+          } else {
+            insights.push(
+              `⚠️ MODERATE RISK: ${probability}% likelihood - May need additional incentives`
+            );
+            insights.push(`🎁 Consider bundling with complementary offers`);
+          }
+
+          if (data.children >= 2) {
+            insights.push(
+              `👨‍👩‍👧‍👦 Family-focused: ${data.children} children - Target family-oriented products`
+            );
+          }
+
+          if (data.lastPurchase <= 7) {
+            insights.push(
+              `🔥 HOT LEAD: Recent purchase activity - Strike while engagement is high`
+            );
+          } else if (data.lastPurchase > 45) {
+            insights.push(
+              `📢 RE-ENGAGEMENT: Long dormancy period - Win-back campaign recommended`
+            );
+          }
+
+          const categoryTransactions = data.transactions.filter(
+            (t) => t.category === data.preferredCategory
+          );
+          if (categoryTransactions.length > 0) {
+            insights.push(
+              `✨ Category affinity confirmed - ${categoryTransactions.length} recent ${data.preferredCategory} purchases`
+            );
+          }
+        } else {
+          insights.push(`❌ NOT ELIGIBLE: Address eligibility barriers first`);
+          insights.push(
+            `🔄 Monitor for behavioral changes - reassess quarterly`
+          );
+          insights.push(`📈 Consider lower-threshold entry-level offers`);
+        }
+
+        return insights;
+      }
+
+      function suggestAlternativeCoupons(data) {
+        const alternatives = [];
+        const sortedCoupons = Object.entries(coupons)
+          .filter(([key]) => key !== data.preferredCategory)
+          .map(([key, coupon]) => ({
+            key,
+            ...coupon,
+            score: calculateCouponFit(data, coupon),
+          }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3);
+
+        return sortedCoupons;
+      }
+
+      function calculateCouponFit(data, coupon) {
+        let score = 50;
+
+        if (data.avgPurchase >= coupon.minPurchase) score += 30;
+        else if (data.avgPurchase >= coupon.minPurchase * 0.7) score += 15;
+
+        const categoryTransactions = data.transactions.filter((t) =>
+          t.category.includes(coupon.category.split(" ")[0].toLowerCase())
+        );
+        score += categoryTransactions.length * 10;
+
+        if (coupon.discount >= 20 && data.incomeBracket === "low") score += 15;
+        if (coupon.discount <= 15 && data.incomeBracket === "premium")
+          score += 10;
+
+        return score;
+      }
+
+      function calculatePredictedRevenue(data, probability, coupon) {
+        const baseRevenue = data.avgPurchase * data.purchaseFrequency * 12;
+        const couponUplift = (probability / 100) * 0.15;
+        return Math.round(baseRevenue * (1 + couponUplift));
+      }
+
+      function identifyRiskFactors(data) {
+        const risks = [];
+
+        if (data.lastPurchase > 60) risks.push("Long dormancy period");
+        if (data.purchaseFrequency < 2) risks.push("Low engagement");
+        if (data.couponUsageHistory === 0) risks.push("No coupon experience");
+        if (data.avgPurchase < 50) risks.push("Low average order value");
+        if (data.age > 65) risks.push("Technology adoption concerns");
+
+        return risks;
+      }
+
+      function generateRecommendedActions(data, probability, eligible) {
+        const actions = [];
+
+        if (eligible && probability >= 70) {
+          actions.push("Launch immediate targeted campaign");
+          actions.push("Use premium creative assets");
+          actions.push("Enable cross-selling opportunities");
+        } else if (eligible && probability >= 50) {
+          actions.push("A/B test different offer values");
+          actions.push("Personalize messaging");
+          actions.push("Follow up with email sequence");
+        } else if (eligible) {
+          actions.push("Start with lower-risk offers");
+          actions.push("Focus on education-based content");
+          actions.push("Build relationship before hard sell");
+        } else {
+          actions.push("Nurture with valuable content");
+          actions.push("Track behavioral changes");
+          actions.push("Consider alternative engagement strategies");
+        }
+
+        return actions;
+      }
+
+      function displayEnhancedResults(analysis) {
+        const content = document.getElementById("resultsContent");
+
+        const eligibilityClass = analysis.isEligible
+          ? "eligible"
+          : "not-eligible";
+        const eligibilityText = analysis.isEligible
+          ? "ELIGIBLE ✅"
+          : "NOT ELIGIBLE ❌";
+
+        let reasonsHtml = "";
+        if (analysis.eligibilityReasons.length > 0) {
+          reasonsHtml = `
+                    <div style="margin: 20px 0; padding: 20px; background: ${
+                      analysis.isEligible
+                        ? "rgba(0, 100, 80, 0.3)"
+                        : "rgba(100, 0, 40, 0.3)"
+                    }; border-radius: 15px;">
+                        <strong>${
+                          analysis.isEligible
+                            ? "Considerations:"
+                            : "Eligibility Issues:"
+                        }</strong>
+                        <ul style="margin-top: 10px; list-style: none; padding-left: 0;">
+                            ${analysis.eligibilityReasons
+                              .map(
+                                (reason) =>
+                                  `<li style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">• ${reason}</li>`
+                              )
+                              .join("")}
+                        </ul>
+                    </div>
+                `;
+        }
+
+        content.innerHTML = `
+                <div style="text-align: center; margin-bottom: 35px;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: #00c8ff;">Customer: ${
+                      customerData.name
+                    } (ID: ${customerData.customerId})</h3>
+                    <div class="eligibility-badge ${eligibilityClass}">
+                        ${eligibilityText}
+                        <span style="font-size: 0.8rem; opacity: 0.9; margin-left: 10px;">Score: ${
+                          analysis.eligibilityScore
+                        }/100</span>
+                    </div>
+                    ${reasonsHtml}
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">${
+                          analysis.customerScore
+                        }/100</div>
+                        <div class="stat-label">Customer Value Score</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #ff3366, #ff1144);">
+                        <div class="stat-number">${
+                          analysis.recommendedCoupon.discount
+                        }%</div>
+                        <div class="stat-label">Recommended Discount</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #00cc88, #00aa66);">
+                        <div class="stat-number">${
+                          analysis.recommendedCoupon.minPurchase
+                        }</div>
+                        <div class="stat-label">Minimum Purchase</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #ffaa00, #ff8800);">
+                        <div class="stat-number">${analysis.predictedRevenue.toLocaleString()}</div>
+                        <div class="stat-label">Predicted Annual Revenue</div>
+                    </div>
+                </div>
+
+                <div class="probability-container">
+                    <h4 style="margin-bottom: 15px; color: #00c8ff;">Probability of Coupon Usage</h4>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: ${
+                          analysis.usageProbability
+                        }%"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                        <span>${analysis.usageProbability}% Probability</span>
+                        <span style="color: #00c8ff;">Confidence: ${
+                          analysis.confidenceLevel
+                        }</span>
+                    </div>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #00c8ff; margin-bottom: 15px;">Key Insights</h4>
+                    <div style="background: rgba(0, 50, 100, 0.3); border-radius: 12px; padding: 20px;">
+                        ${analysis.insights
+                          .map(
+                            (insight) =>
+                              `<p style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">${insight}</p>`
+                          )
+                          .join("")}
+                    </div>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #00c8ff; margin-bottom: 15px;">Recommended Coupon</h4>
+                    <div style="background: linear-gradient(135deg, rgba(0, 100, 200, 0.3), rgba(0, 50, 150, 0.3)); border-radius: 12px; padding: 25px; border: 1px solid rgba(0, 200, 255, 0.3);">
+                        <h3 style="color: #00c8ff; margin-bottom: 10px;">${
+                          analysis.recommendedCoupon.category
+                        }</h3>
+                        <p style="margin-bottom: 15px; opacity: 0.9;">${
+                          analysis.recommendedCoupon.description
+                        }</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div>
+                                <strong>Discount:</strong> ${
+                                  analysis.recommendedCoupon.discount
+                                }% OFF
+                            </div>
+                            <div>
+                                <strong>Minimum Purchase:</strong> $${
+                                  analysis.recommendedCoupon.minPurchase
+                                }
+                            </div>
+                            <div>
+                                <strong>Validity:</strong> ${
+                                  analysis.recommendedCoupon.validityDays
+                                } days
+                            </div>
+                            <div>
+                                <strong>Campaign Code:</strong> ${
+                                  analysis.recommendedCoupon.campaignCode
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                ${
+                  analysis.alternativeCoupons.length > 0
+                    ? `
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #00c8ff; margin-bottom: 15px;">Alternative Coupon Suggestions</h4>
+                    <div class="recommendations-grid">
+                        ${analysis.alternativeCoupons
+                          .map(
+                            (coupon) => `
+                            <div class="recommendation-card">
+                                <h5 style="color: #00c8ff; margin-bottom: 10px;">${coupon.category}</h5>
+                                <p style="margin-bottom: 15px; font-size: 0.9rem; opacity: 0.8;">${coupon.description}</p>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>${coupon.discount}% OFF</span>
+                                    <span>Min: $${coupon.minPurchase}</span>
+                                </div>
+                            </div>
+                        `
+                          )
+                          .join("")}
+                    </div>
+                </div>
+                `
+                    : ""
+                }
+
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #00c8ff; margin-bottom: 15px;">Recommended Actions</h4>
+                    <div style="background: rgba(0, 50, 100, 0.3); border-radius: 12px; padding: 20px;">
+                        ${analysis.recommendedActions
+                          .map(
+                            (action) =>
+                              `<p style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">• ${action}</p>`
+                          )
+                          .join("")}
+                    </div>
+                </div>
+
+                ${
+                  analysis.riskFactors.length > 0
+                    ? `
+                <div style="margin: 30px 0;">
+                    <h4 style="color: #ff3366; margin-bottom: 15px;">Risk Factors</h4>
+                    <div style="background: rgba(100, 0, 40, 0.3); border-radius: 12px; padding: 20px; border-left: 4px solid #ff3366;">
+                        ${analysis.riskFactors
+                          .map(
+                            (risk) =>
+                              `<p style="padding: 5px 0;">⚠️ ${risk}</p>`
+                          )
+                          .join("")}
+                    </div>
+                </div>
+                `
+                    : ""
+                }
+            `;
+      }
+
+      function displayCustomerSummary() {
+        const summary = document.getElementById("customerSummary");
+        summary.innerHTML = `
+                <div style="margin: 15px 0;">
+                    <strong>Name:</strong> ${customerData.name}
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Age:</strong> ${customerData.age} | <strong>Gender:</strong> ${customerData.gender}
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Family:</strong> ${customerData.familySize} members (${customerData.children} children)
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Income:</strong> ${customerData.incomeBracket}
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Preferred Category:</strong> ${customerData.preferredCategory}
+                </div>
+                <div style="margin: 15px 0;">
+                    <strong>Avg Purchase:</strong> $${customerData.avgPurchase} | <strong>Frequency:</strong> ${customerData.purchaseFrequency}/month
+                </div>
+            `;
+      }
+
+      function displayCampaignTimeline() {
+        const now = new Date();
+        document.getElementById("analysisTime").textContent =
+          now.toLocaleString();
+
+        const startDate = new Date(now);
+        startDate.setDate(startDate.getDate() + 1);
+        document.getElementById("campaignStart").textContent =
+          startDate.toLocaleDateString();
+
+        const deliveryDate = new Date(now);
+        deliveryDate.setDate(deliveryDate.getDate() + 2);
+        document.getElementById("couponDelivery").textContent =
+          deliveryDate.toLocaleDateString();
+
+        const endDate = new Date(now);
+        endDate.setDate(endDate.getDate() + 32);
+        document.getElementById("campaignEnd").textContent =
+          endDate.toLocaleDateString();
+      }
+
+      window.onload = function () {
+        createParticles();
+      };
+    </script>
+  </body>
+</html>
